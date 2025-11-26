@@ -1,0 +1,52 @@
+name: CI/CD Build & Push Docker Image
+
+on:
+  push:
+    branches:
+      - main
+      - master
+  pull_request:
+    branches:
+      - main
+      - master
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+    steps:
+      # 1. Checkout the repository
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      # 2. Log in to Docker Hub
+      - name: Log in to Docker Hub
+        uses: docker/login-action@v2
+        with:
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
+
+      # 3. Build Docker Image
+      - name: Build Docker Image
+        run: |
+          docker build . --file Dockerfile --tag interactive-resume:latest
+          docker tag interactive-resume:latest ${{ secrets.DOCKERHUB_USERNAME }}/interactive-resume:latest
+
+      # 4. Run Smoke Test Container
+      - name: Run Smoke Test Container
+        run: |
+          docker run -d --name test_resume -p 80:80 ${{ secrets.DOCKERHUB_USERNAME }}/interactive-resume:latest
+          sleep 5
+
+      # 5. Verify Webpage is Accessible
+      - name: Verify Webpage is Accessible
+        run: curl --fail http://localhost
+
+      # 6. Stop and remove the test container
+      - name: Cleanup Test Container
+        run: |
+          docker stop test_resume
+          docker rm test_resume
+
+      # 7. Push Docker Image to Docker Hub
+      - name: Push Docker Image to Docker Hub
+        run: docker push ${{ secrets.DOCKERHUB_USERNAME }}/interactive-resume:latest

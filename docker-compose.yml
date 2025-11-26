@@ -1,0 +1,17 @@
+version: '3.8'
+
+services:
+  resume_web:
+    # Use Dockerfile in the current directory to build the image
+    build:
+      context: .
+      dockerfile: Dockerfile
+    # Tag the image locally
+    image: interactive-resume:latest
+    container_name: interactive_resume
+    restart: always
+    ports:
+      # Map host port 8080 to container port 80
+      - "8080:80"
+    # The 'volumes:' key is now completely absent or must be structured if used.
+    # We remove it entirely since you are using COPY in the Dockerfile.
