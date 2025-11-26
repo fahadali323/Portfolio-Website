@@ -1,4 +1,4 @@
-name: CI/CD Build + Deploy
+name: CI/CD
 
 on:
   push:
@@ -7,46 +7,75 @@ on:
     branches: [ main, master ]
 
 jobs:
-  build-and-deploy:
+  test:
     runs-on: ubuntu-latest
 
     steps:
-    - name: Checkout Code
-      uses: actions/checkout@v4
+      - name: Checkout Code
+        uses: actions/checkout@v4
 
-    # --- Build Image ---
-    - name: Build Docker Image
-      run: docker build -t fahadali323/portfoliowebsite:latest .
+      - name: Build Docker Image
+        run: docker build -t interactive-resume:test .
 
-    # --- Login to Docker Hub ---
-    - name: Login to DockerHub
-      uses: docker/login-action@v3
-      with:
-        username: ${{ secrets.DOCKER_USERNAME }}
-        password: ${{ secrets.DOCKER_TOKEN }}
+      - name: Run Smoke Test Container
+        run: |
+          docker run -d --name test_resume -p 80:80 interactive-resume:test
+          sleep 5
 
-    # --- Push to Docker Hub ---
-    - name: Push Image to DockerHub
-      run: docker push fahadali323/portfoliowebsite:latest
+      - name: Verify Webpage Works
+        run: curl --fail http://localhost
 
-    # --- Deploy on Remote Server ---
-    - name: Deploy to Remote Server
-      uses: appleboy/ssh-action@v1.0.3
-      with:
-        host: ${{ secrets.SERVER_HOST }}
-        username: ${{ secrets.SERVER_USER }}
-        key: ${{ secrets.SERVER_SSH_KEY }}
-        port: 22
-        script: |
-          docker pull fahadali323/portfoliowebsite:latest
-          
-          # stop old container (ignore errors)
-          docker stop interactive-resume || true
-          docker rm interactive-resume || true
-          
-          # start new container
-          docker run -d \
-            --name interactive-resume \
-            -p 80:80 \
-            --restart always \
-            ${{ secrets.DOCKER_USERNAME }}/interactive-resume:latest
+      - name: Cleanup
+        run: |
+          docker stop test_resume
+          docker rm test_resume
+
+  security:
+    needs: test
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: Build image for scanning
+        run: docker build -t interactive-resume:scan .
+
+      - name: Run Trivy vulnerability scanner
+        uses: aquasecurity/trivy-action@master
+        with:
+          image-ref: 'interactive-resume:scan'
+          format: 'table'
+          exit-code: '1'
+          ignore-unfixed: true
+          severity: 'CRITICAL,HIGH'
+
+  deploy:
+    needs: security
+    if: github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    environment: production
+
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Log in to Docker Hub
+        uses: docker/login-action@v3
+        with:
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
+
+      - name: Build and Push Docker Image
+        uses: docker/build-push-action@v5
+        with:
+          push: true
+          tags: |
+            fahadali323/portfoliowebsite:latest
+            fahadali323/portfoliowebsite:${{ github.sha }}
+          platforms: linux/amd64,linux/arm64
+          cache-from: type=registry,ref=$fahadali323/portfoliowebsite:cache
+          cache-to: type=inline,mode=max
