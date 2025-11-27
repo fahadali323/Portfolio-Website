@@ -7,9 +7,9 @@ export const DEFAULT_CONTENT = {
         phone: "(555) 987-6543",
         image: "/images/wheel.jpg", 
         links: {
-            linkedin: "https://linkedin.com/in/fahadali",
-            github: "https://github.com/fahadali",
-            portfolio: "https://fahadali.dev"
+            linkedin: "https://www.linkedin.com/in/fahad-ali-njit/",
+            github: "https://github.com/fahadali323",
+            portfolio: "https://fahad-ali.cloud/"
         }
     },
     summary: {
