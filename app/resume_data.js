@@ -9,7 +9,7 @@ export const DEFAULT_CONTENT = {
         links: {
             linkedin: "https://www.linkedin.com/in/fahad-ali-njit/",
             github: "https://github.com/fahadali323",
-            portfolio: "https://fahad-ali.cloud/"
+            portfolio: "https://fahad-ali.cloud/ "
         }
     },
     summary: {
