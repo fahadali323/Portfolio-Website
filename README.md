@@ -1,43 +1,109 @@
-# 🧑‍💻 Dynamic Resume Website
+# Interactive 3D Resume — Static Site (Nginx + Docker)
 
-A full-stack resume website built with **React + TypeScript** for the frontend and **Spring Boot (Java) + SQL** for the backend. It includes an **internal admin dashboard** to update resume content dynamically and upload images/videos.
+This repository contains a single-page, interactive 3D resume built with plain HTML, CSS, and JavaScript.
+The 3D panels are rendered using Three.js's CSS3DRenderer and the site includes a small in-browser control panel that edits the resume data (stored in `app/resume_data.js` and persisted to `localStorage`).
 
----
+This project is shipped as static files in the `app/` folder and includes a `Dockerfile` + `docker-compose.yml` to serve the site with Nginx.
 
-## 📦 Tech Stack
+**Status:** Lightweight static site — no Node/React or Java backend required.
 
-- **Frontend**: React, TypeScript, Vite (or Create React App)
-- **Backend**: Java, Spring Boot, Spring Data JPA, Spring Security
-- **Database**: MySQL (or PostgreSQL)
-- **Storage**: Local File System or AWS S3 (configurable)
-- **Auth**: Spring Security (Admin Panel)
+**Live port (default):** `http://localhost:8080` when run with Docker Compose.
 
 ---
 
-## ✨ Features
-
-- Dynamic rendering of resume sections (Education, Experience, Skills, etc.)
-- Internal admin tool to:
-  - Edit text content with a rich-text editor
-  - Upload and preview images/videos
-  - Reorder or delete sections
-- RESTful API between frontend and backend
-- Protected admin routes (JWT-based or Basic Auth)
-- Fully responsive design (Tailwind or MUI)
+**Tech stack**
+- **Frontend:** Plain HTML, Tailwind (CDN), vanilla JavaScript
+- **3D rendering:** Three.js (CSS3DRenderer)
+- **Container / webserver:** Nginx (image built from `Dockerfile`)
 
 ---
 
-## 🗂 Project Structure
+**What you'll find in this repo**
+- **`app/`**: The static website files — `index.html`, `frontend.js`, `resume_data.js` and other assets.
+- **`images/`**: Image assets referenced by the site.
+- **`Dockerfile`**: Nginx-based image that copies `app/` into `/usr/share/nginx/html`.
+- **`docker-compose.yml`**: Simple compose file to build and run the container on port `8080`.
+- **`nginx.conf`**: Nginx configuration used by the container.
 
+---
+
+**Quick start — run with Docker Compose**
+
+1. From the repository root run:
+
+```bash
+docker compose up --build
 ```
-resume-website/
-├── backend/
-│   ├── src/
-│   ├── pom.xml
-│   └── application.properties
-├── frontend/
-│   ├── public/
-│   ├── src/
+
+2. Open `http://localhost:8080` in your browser.
+
+Notes:
+- The compose file maps host port `8080` to container port `80`.
+- If you prefer to run without compose you can build and run the image manually:
+
+```bash
+docker build -t interactive-resume:latest .
+docker run -p 8080:80 interactive-resume:latest
+```
+
+---
+
+**Local development (no Docker)**
+
+Option A — quickly preview the static site (recommended):
+
+```bash
+# from repo root
+python -m http.server --directory app 8000
+# then open http://localhost:8000
+```
+
+Option B — open the file directly in a browser (some features like module imports and CORS may be limited):
+
+Open `app/index.html` in your browser (double-click or use your editor's Live Preview).
+
+---
+
+**Editing resume content**
+- The canonical data object is in `app/resume_data.js` — update `DEFAULT_CONTENT` to change the default resume.
+- The control panel in the running page edits the live data and saves edits to `localStorage` (key `resume_content_v2`). These changes affect the current browser only and are not persisted to the Docker image or source files.
+
+---
+
+**How the app works (short)**
+- `app/index.html` loads `resume_data.js` (exports `getResumeContent()` and `DEFAULT_CONTENT`) and `frontend.js` which:
+  - Initializes a Three.js `CSS3DRenderer` and places DOM panels into 3D space.
+  - Renders header, summary, experience, skills, and education from `getResumeContent()`.
+  - Provides an in-page Control Panel to edit content and save to `localStorage`.
+
+---
+
+**Troubleshooting & tips**
+- If the page looks broken, open DevTools console to check for module or resource errors.
+- When running with Docker, if `docker compose up` exits or the container fails to bind, check which process is using port `8080`.
+- To reset in-browser edits, clear `localStorage` for the site or run `localStorage.removeItem('resume_content_v2')` in DevTools.
+
+---
+
+**Files of interest**
+- `app/index.html` — entry HTML + control panel markup and CDN includes (Three.js, Tailwind)
+- `app/frontend.js` — main client logic (rendering, control panel, localStorage hooks)
+- `app/resume_data.js` — default content and the simulated `getResumeContent()` API
+- `Dockerfile` & `docker-compose.yml` — build and run with Nginx
+- `nginx.conf` — small nginx config used in the image
+
+---
+
+**License & author**
+- MIT License
+- Author: Fahad Ali — see `app/resume_data.js` for links to GitHub and portfolio
+
+---
+
+If you want, I can:
+- Add a short health-check endpoint served by Nginx (redirect) or
+- Add a small Makefile / npm script to run the local static server and Docker commands.
+Let me know which you'd prefer.
 │   │   ├── components/
 │   │   ├── pages/
 │   │   ├── api/
