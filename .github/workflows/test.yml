@@ -2,11 +2,15 @@ name: CI/CD
 
 on:
   push:
-    branches: [ main, master ]
+    branches: [ main ]
   pull_request:
-    branches: [ main, master ]
+    branches: [ main ]
 
 jobs:
+
+  # --------------------------------------------------------------------------
+  # TEST JOB
+  # --------------------------------------------------------------------------
   test:
     runs-on: ubuntu-latest
 
@@ -14,22 +18,23 @@ jobs:
       - name: Checkout Code
         uses: actions/checkout@v4
 
-      - name: Build Docker Image
+      - name: Build Docker Image (local test)
         run: docker build -t interactive-resume:test .
 
-      - name: Run Smoke Test Container
+      - name: Run Smoke Test
         run: |
           docker run -d --name test_resume -p 80:80 interactive-resume:test
-          sleep 5
-
-      - name: Verify Webpage Works
-        run: curl --fail http://localhost
+          sleep 4
+          curl --fail http://localhost || exit 1
 
       - name: Cleanup
         run: |
           docker stop test_resume
           docker rm test_resume
 
+  # --------------------------------------------------------------------------
+  # SECURITY SCAN
+  # --------------------------------------------------------------------------
   security:
     needs: test
     runs-on: ubuntu-latest
@@ -41,7 +46,7 @@ jobs:
       - name: Build image for scanning
         run: docker build -t interactive-resume:scan .
 
-      - name: Run Trivy vulnerability scanner
+      - name: Run Trivy Scan
         uses: aquasecurity/trivy-action@master
         with:
           image-ref: 'interactive-resume:scan'
@@ -50,17 +55,20 @@ jobs:
           ignore-unfixed: true
           severity: 'CRITICAL,HIGH'
 
+  # --------------------------------------------------------------------------
+  # DEPLOY JOB
+  # --------------------------------------------------------------------------
   deploy:
     needs: security
-    if: github.ref == 'refs/heads/main'
     runs-on: ubuntu-latest
     environment: production
+    if: github.ref == 'refs/heads/main'
 
     steps:
       - name: Checkout Code
         uses: actions/checkout@v4
 
-      - name: Set up Docker Buildx
+      - name: Set up Buildx
         uses: docker/setup-buildx-action@v3
 
       - name: Log in to Docker Hub
@@ -69,7 +77,7 @@ jobs:
           username: ${{ secrets.DOCKERHUB_USERNAME }}
           password: ${{ secrets.DOCKERHUB_TOKEN }}
 
-      - name: Build and Push Docker Image
+      - name: Build and Push Image
         uses: docker/build-push-action@v5
         with:
           push: true
@@ -77,10 +85,9 @@ jobs:
             fahadali323/portfoliowebsite:latest
             fahadali323/portfoliowebsite:${{ github.sha }}
           platforms: linux/amd64,linux/arm64
-          cache-from: type=registry,ref=fahadali323/portfoliowebsite:cache
-          cache-to: type=inline,mode=max
+          no-cache: true        # Force fresh rebuild (important)
 
-      - name: Deploy to Remote Server
+      - name: Deploy to Server
         uses: appleboy/ssh-action@v1.0.3
         with:
           host: ${{ secrets.SERVER_HOST }}
@@ -88,18 +95,21 @@ jobs:
           key: ${{ secrets.SERVER_SSH_KEY }}
           port: 22
           script: |
-            echo "Stopping old containers..."
+            echo "--- STOPPING OLD CONTAINER ---"
             docker stop interactive-resume || true
             docker rm interactive-resume || true
 
-            echo "Pulling latest image..."
-            docker pull fahadali323/portfoliowebsite:latest
+            echo "--- PRUNING OLD IMAGES ---"
+            docker image prune -a -f
 
-            echo "Starting new container..."
+            echo "--- PULLING LATEST IMAGE ---"
+            docker pull --no-cache fahadali323/portfoliowebsite:latest
+
+            echo "--- STARTING NEW CONTAINER ---"
             docker run -d \
               --name interactive-resume \
               -p 8080:80 \
               --restart always \
               fahadali323/portfoliowebsite:latest
 
-            echo "Deployment successful."
+            echo "--- DEPLOYMENT COMPLETE ---"

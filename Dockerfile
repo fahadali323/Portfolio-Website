@@ -6,10 +6,7 @@ COPY nginx.conf /etc/nginx/conf.d/default.conf
 
 # Copy the entire project content into the Nginx static file directory
 # Assuming index.html, frontend.js, resume_data.js, Dockerfile, and nginx.conf are in the root directory
-COPY app/index.html /usr/share/nginx/html/
-COPY app/frontend.js /usr/share/nginx/html/
-COPY app/resume_data.js /usr/share/nginx/html/
-
+COPY app/ /usr/share/nginx/html/
 
 # The default Nginx port is 80.
 EXPOSE 80
