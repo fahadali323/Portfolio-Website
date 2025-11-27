@@ -12,6 +12,6 @@ services:
     restart: always
     ports:
       # Map host port 8080 to container port 80
-      - "8080:80"
+      - "80:80"
     # The 'volumes:' key is now completely absent or must be structured if used.
     # We remove it entirely since you are using COPY in the Dockerfile.
