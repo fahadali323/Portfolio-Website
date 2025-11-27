@@ -98,6 +98,6 @@ jobs:
             # Start new container
             docker run -d \
               --name interactive-resume \
-              -p 80:80 \
+              -p 8080:80 \
               --restart always \
               fahadali323/portfoliowebsite:latest
