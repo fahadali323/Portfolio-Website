@@ -523,7 +523,7 @@ function handleKeydown(event) {
 // --- Image Upload Logic (Unchanged) ---
 window.updateImageSource = function(source) {
     const imgElement = document.getElementById("profile-img");
-    const defaultPlaceholder = "https://placehold.co/80x80/4b5563/ffffff?text=AJ";
+    const defaultPlaceholder = "../images/wheel.jpg";
     if (source) {
         imgElement.src = source;
         imgElement.onerror = () => {
