@@ -88,16 +88,18 @@ jobs:
           key: ${{ secrets.SERVER_SSH_KEY }}
           port: 22
           script: |
-            # Pull the latest image
-            docker pull fahadali323/portfoliowebsite:latest
-            
-            # Stop and remove old container (ignore errors)
+            echo "Stopping old containers..."
             docker stop interactive-resume || true
             docker rm interactive-resume || true
-            
-            # Start new container
+
+            echo "Pulling latest image..."
+            docker pull fahadali323/portfoliowebsite:latest
+
+            echo "Starting new container..."
             docker run -d \
               --name interactive-resume \
               -p 8080:80 \
               --restart always \
               fahadali323/portfoliowebsite:latest
+
+            echo "Deployment successful."
