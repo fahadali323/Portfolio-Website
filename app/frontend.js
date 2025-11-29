@@ -112,15 +112,21 @@ function renderSkills(skillCategories) {
 }
 
 function renderEducation(data) {
-    const container = document.getElementById('education-entry');
-    container.innerHTML = `
-        <div class="flex justify-between items-start mb-1">
-            <h3 class="text-xl font-semibold text-blue-800">${data.degree}</h3>
-            <p class="text-sm font-medium text-gray-500">${data.years}</p>
-        </div>
-        <p class="text-lg font-medium text-gray-600 mb-2">${data.institution}</p>
-        <p class="text-gray-700">${data.details}</p>
-    `;
+  const container = document.getElementById('education-entry');
+
+  // Accept either an array of entries or a single object
+  const entries = Array.isArray(data) ? data : [data];
+
+  container.innerHTML = entries.map(ed => `
+    <div class="p-4 mb-4 border rounded-lg bg-gray-50">
+      <div class="flex justify-between items-start mb-1">
+        <h3 class="text-xl font-semibold text-blue-800">${ed.degree}</h3>
+        <p class="text-sm font-medium text-gray-500">${ed.years}</p>
+      </div>
+      <p class="text-lg font-medium text-gray-600 mb-2">${ed.institution}</p>
+      <p class="text-gray-700">${ed.details}</p>
+    </div>
+  `).join('');
 }
 
 // Re-attaches click listeners after dynamically injecting content
