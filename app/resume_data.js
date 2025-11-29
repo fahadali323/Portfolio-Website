@@ -4,7 +4,7 @@ export const DEFAULT_CONTENT = {
     name: "Fahad Ali",
     title: "Software Engineer",
     email: "afahad630@gmail.com",
-    phone: "(908) 987-6543",
+    phone: "(908) 875-0596",
     image: "/images/wheel.jpg",
     links: {
       linkedin: "https://linkedin.com/in/fahad-ali-njit",
@@ -26,10 +26,10 @@ export const DEFAULT_CONTENT = {
   experience: [
     {
       id: 1,
-      title: "Software Engineer Intern",
-      company: "Thorlabs",
-      location: "Newton, New Jersey, USA",
-      years: "May 2025 – August 2025",
+      title: "Long Term Teacher",
+      company: "ESS",
+      location: "Plainfield, New Jersey, USA",
+      years: "May 2025 – Aug 2025",
       details: [
         "Refactored legacy ColdFusion backend and frontend logic to support migration to C# and Vue.js.",
         "Rebuilt the product configurator UI in Vue.js with real-time pricing validation, reducing user errors by 60%.",
@@ -40,9 +40,33 @@ export const DEFAULT_CONTENT = {
     {
       id: 2,
       title: "Software Engineer Intern",
+      company: "Thorlabs",
+      location: "Newton, New Jersey, USA",
+      years: "May 2025 – Aug 2025",
+      details: [
+        "Managed classroom activities and maintained a positive learning environment in the absence of the regular teacher.",
+        "Delivered lesson plans and instructional materials effectively across various grade levels and subjects.",
+        "Communicated with school staff regarding student progress, classroom issues, and lesson coverage.",
+      ],
+    },
+        {
+      id: 3,
+      title: "Cashier",
+      company: "GigiCupcakes",
+      location: "New Jersey, USA",
+      years: "Nov 2022 – Jan 2025",
+      details: [
+        "Processed customer transactions accurately and efficiently.",
+        "Provided exceptional customer service in a fast-paced retail environment.",
+        "Maintained organization and cleanliness of the workspace.",
+      ],
+    },
+    {
+      id: 4,
+      title: "Software Engineer Intern",
       company: "Power Change Lives",
       location: "New Jersey, USA",
-      years: "May 2024 – August 2024",
+      years: "May 2024 – Aug 2024",
       details: [
         "Assisted the team lead in managing a cohort of 31 interns, improving communication and coordination.",
         "Provided technical support for weekly presentations and system demos.",
@@ -50,11 +74,11 @@ export const DEFAULT_CONTENT = {
       ],
     },
     {
-      id: 3,
+      id: 5,
       title: "Web Developer Intern",
       company: "IGo STEM Academy",
       location: "New Jersey, USA",
-      years: "January 2023 – May 2023",
+      years: "Jan 2023 – May 2023",
       details: [
         "Developed components for an online tutoring platform using React and Node.js.",
         "Implemented responsive UI features and improved student interactions with the platform.",
