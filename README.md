@@ -232,4 +232,4 @@ MIT License © 2025 Your Name
 For questions or suggestions, feel free to reach out:
 
 **Your Name**  
-[Email](mailto:your-email@example.com) | [GitHub](https://github.com/your-username)
+[Email](mailto:afahad630@gmail.com) | [GitHub](https://github.com/fahadali323)
