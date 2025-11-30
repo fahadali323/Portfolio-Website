@@ -137,7 +137,7 @@ export const DEFAULT_CONTENT = {
       institution: "New Jersey Institue of Technology",
       years: "Jan 2025 – Present",
       details:
-        "Advanced coursework in distributed systems and cloud computing.",
+        "Advanced coursework in web-development and cloud computing.",
     },
     {
       degree: "B.S. in Computer Science",
@@ -150,7 +150,7 @@ export const DEFAULT_CONTENT = {
       degree: "High School Diploma",
       institution: "Union High School",
       years: "Sep 2016 - May 2020",
-      details: "Specialization in Machine Learning and Data Engineering.",
+      details: "General Education Courses",
     },
   ],
 

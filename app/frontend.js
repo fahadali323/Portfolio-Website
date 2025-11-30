@@ -529,7 +529,7 @@ function handleKeydown(event) {
 // --- Image Upload Logic (Unchanged) ---
 window.updateImageSource = function(source) {
     const imgElement = document.getElementById("profile-img");
-    const defaultPlaceholder = "../images/profile.jpg";
+    const defaultPlaceholder = "images/profile.png";
     if (source) {
         imgElement.src = source;
         imgElement.onerror = () => {

@@ -169,6 +169,24 @@
       #profile-img {
         object-fit: cover; /* keep this so image fills the circle */
         object-position: 50% 36%; /* adjust X% Y% to center the face */
+        width: 100%;
+        height: 100%;
+        display: block;
+        transition: filter 0.15s ease-in-out;
+      }
+
+      /* Profile overlay: show only camera icon on hover */
+      .profile-overlay .camera-icon {
+        opacity: 0;
+        pointer-events: none;
+        transition: opacity 0.15s ease-in-out;
+      }
+      #profile-image-container:hover .profile-overlay .camera-icon {
+        opacity: 1;
+      }
+      /* Dim the photo slightly on hover while showing the camera icon */
+      #profile-image-container:hover #profile-img {
+        filter: grayscale(25%) brightness(0.85);
       }
     </style>
   </head>
@@ -181,38 +199,12 @@
       class="p-4 sm:p-6 text-white flex justify-between items-center space-x-4"
     >
       <div class="flex items-center space-x-4">
-        <div
-          id="profile-image-container"
-          class="relative w-20 h-20 rounded-full border-4 border-blue-400 overflow-hidden bg-gray-700 group"
-        >
-          <img
-            id="profile-img"
-            src="../images/profile.png"
-            alt="../images/profile.png"
-            class="object-cover transition duration-300 group-hover:opacity-50"
-          />
-          <div
-            class="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition duration-300"
-          >
-            <img
-              id="profile-img"
-              src="images/profile.png"
-              alt="Fahad Ali — profile photo"
-              class="object-cover transition duration-300 group-hover:opacity-50"
-            />
-            >
-              <path
-                stroke-linecap="round"
-                stroke-linejoin="round"
-                stroke-width="2"
-                d="M3 9a2 2 0 012-2h.93a2 2 0 001.664-.89l.864-1.296A2 2 0 0111.45 4h1.09a2 2 0 011.664.89l.864 1.296a2 2 0 001.664.89H19a2 2 0 012 2v9a2 2 0 01-2 2H5a2 2 0 01-2-2V9z"
-              />
-              <path
-                stroke-linecap="round"
-                stroke-linejoin="round"
-                stroke-width="2"
-                d="M15 13a3 3 0 11-6 0 3 3 0 016 0z"
-              />
+        <div id="profile-image-container" class="relative w-20 h-20 rounded-full border-4 border-blue-400 overflow-hidden bg-gray-700">
+          <img id="profile-img" src="images/profile.png" alt="" aria-hidden="false" class="object-cover w-full h-full" />
+          <div class="profile-overlay absolute inset-0 flex items-center justify-center pointer-events-none">
+            <svg class="camera-icon w-6 h-6 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 9a2 2 0 012-2h.93a2 2 0 001.664-.89l.864-1.296A2 2 0 0111.45 4h1.09a2 2 0 011.664.89l.864 1.296a2 2 0 001.664.89H19a2 2 0 012 2v9a2 2 0 01-2 2H5a2 2 0 01-2-2V9z" />
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 13a3 3 0 11-6 0 3 3 0 016 0z" />
             </svg>
           </div>
         </div>
