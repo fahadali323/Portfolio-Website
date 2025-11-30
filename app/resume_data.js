@@ -5,7 +5,7 @@ export const DEFAULT_CONTENT = {
     title: "Software Engineer",
     email: "afahad630@gmail.com",
     phone: "(908) 875-0596",
-    image: "/images/wheel.jpg",
+    image: "/images/profile.jpg",
     links: {
       linkedin: "https://linkedin.com/in/fahad-ali-njit",
       github: "https://github.com/fahadali323",

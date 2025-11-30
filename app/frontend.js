@@ -529,7 +529,7 @@ function handleKeydown(event) {
 // --- Image Upload Logic (Unchanged) ---
 window.updateImageSource = function(source) {
     const imgElement = document.getElementById("profile-img");
-    const defaultPlaceholder = "../images/wheel.jpg";
+    const defaultPlaceholder = "../images/profile.jpg";
     if (source) {
         imgElement.src = source;
         imgElement.onerror = () => {
@@ -541,12 +541,12 @@ window.updateImageSource = function(source) {
     }
 }
 
-function loadProfileImage() {
-    const savedImage = localStorage.getItem(PROFILE_IMAGE_KEY);
-    if (savedImage) {
-        window.updateImageSource(savedImage);
-    }
-}
+// function loadProfileImage() {
+//     const savedImage = localStorage.getItem(PROFILE_IMAGE_KEY);
+//     if (savedImage) {
+//         window.updateImageSource(savedImage);
+//     }
+// }
 
 window.openImageModal = function () {
     document.getElementById("image-modal").classList.remove("hidden");
@@ -637,7 +637,9 @@ window.saveProfileImage = function () {
 document.addEventListener("DOMContentLoaded", () => {
   init();
   animate();
-  loadProfileImage();
+    if (typeof loadProfileImage === 'function') {
+        loadProfileImage();
+    }
   loadAndRenderContent(); // Load content directly from the API default
 
   window.addEventListener("keydown", handleKeydown);

@@ -9,6 +9,8 @@ COPY nginx.conf /etc/nginx/conf.d/default.conf
 
 # Copy static files
 COPY app/ /usr/share/nginx/html/
+# Copy images directory so profile and other assets are available to Nginx
+COPY images/ /usr/share/nginx/html/images/
 
 # Expose server port
 EXPOSE 80
